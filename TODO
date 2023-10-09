@@ -1,0 +1,18 @@
+Note: None of these are particulary high priority.
+Implementing any of these depends on user feedback.
+
+- Temperatures
+    Provide optional "Temperatures" Label like "CPU Load"
+
+- Uptime Display
+    Allow user to set format
+
+- Add capability to monitor partition usage.
+
+- Create man page
+
+- Internationalization
+
+- Create larger check boxes for high resolution screens
+
+- Provide customization of update timing

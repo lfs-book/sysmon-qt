@@ -30,3 +30,15 @@
 *.exe
 *.out
 *.app
+
+moc*
+*Make*
+Qkrellm
+*.sav*
+notes
+*.swp
+*.sh
+
+*.sh
+*.stash
+

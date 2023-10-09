@@ -1,0 +1,27 @@
+The prerequsites for building Qkrellm are:
+
+- Qt5 or qt-alternate (https://www.linuxfromscratch.org/blfs/view/stable/x/qt5-alternate.html)
+- lm-sensors ( https://www.linuxfromscratch.org/blfs/view/stable/general/lm_sensors.html)
+  Runtime to monitor temperatures.
+
+To build Qkrellm run the following commands:
+
+cd src
+qmake Qkrellm.pro
+make
+
+Install the program (as the root user) with:
+cp Qkrellm /usr/bin
+
+
+Notes:
+- Use F1 to configure Qkrellm
+- Use CTRL-F to toggle the frame.  
+  - Useful for moving the location.
+  - Upon exit, the application will rember it's location.
+- Right click brings up a short menu.
+- The configuration is maintained at
+  $HOME/.config/LinuxFromScratch/QKrellm.conf 
+
+
+
