@@ -33,6 +33,7 @@
 
 moc*
 *Make*
+make-release.sh
 src/sysmon-qt
 *.sav*
 notes

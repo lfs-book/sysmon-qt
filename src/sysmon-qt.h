@@ -2,6 +2,7 @@
 #define SYSMONQT_H
 
 #include <QFont>
+#include <QFile>
 #include <QLabel>
 #include <QLayout>
 #include <QMainWindow>
@@ -29,25 +30,30 @@ private:
    QLabel* textlabel( const QString&, int = -1, int = QFont::Normal );
    QLabel* banner   ( const QString&, int =  0, int = QFont::Bold );
 
-   int       tick            = 0;     // tick every second
-   int       cpu_refresh     = 3;
-   int       memory_refresh  = 3;
-   int       temp_refresh    = 5;
-   int       tempsCount;
-   int       cpuPercentage;
-   bool      pauseUpdate     = false;
-   bool      mFrame          = false; // turn frame on and off
-   bool      pauseTempUpdate = false; // turn temperature update on and off
-   QString   TZ;                      // time zone
-   QPoint    position;                // location of widget
-
-   QLabel*   lbl_hostname;
-   QLabel*   lbl_time;     // time of day
-   QLabel*   lbl_date;     
-   QLabel*   lbl_uptime;
-   QLabel*   lbl_cpu;      // title
-   QLabel*   lbl_loads;    // label for memory
-   QLabel*   lbl_memory;   // title
+   int        tick            = 0;     // tick every second
+   int        cpu_refresh     = 3;
+   int        memory_refresh  = 3;
+   int        temp_refresh    = 5;
+   int        tempsCount;
+   int        cpuPercentage;
+   bool       pauseUpdate     = false;
+   bool       mFrame          = false; // turn frame on and off
+   bool       pauseTempUpdate = false; // turn temperature update on and off
+   QString    TZ;                      // time zone
+   QPoint     position;                // location of widget
+             
+   QLabel*    lbl_hostname;
+   QLabel*    lbl_time;     // time of day
+   QLabel*    lbl_date;     
+   QLabel*    lbl_uptime;
+   QLabel*    lbl_cpu;      // title
+   QLabel*    lbl_loads;    // label for memory
+   QLabel*    lbl_memory;   // title
+             
+   QFile*     fUptime;
+   QFile*     fLoadAvg;
+   QFile*     fMemInfo;
+   QFile*     fStat;
 
    QProgressBar* memory;
    QProgressBar* load;
