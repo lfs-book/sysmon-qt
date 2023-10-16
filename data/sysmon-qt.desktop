@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Icon=sysmon-qt.png
+Exec=sysmon-qt
+Terminal=false
+Categories=Qt;System;
+Name=sysmon-qt
+GenericName=System Monitor
