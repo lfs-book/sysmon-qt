@@ -1,5 +1,5 @@
-#ifndef QKRELLM_H
-#define QKRELLM_H
+#ifndef SYSMONQT_H
+#define SYSMONQT_H
 
 #include <QFont>
 #include <QLabel>
@@ -9,13 +9,13 @@
 #include <QProgressBar>
 #include <QSettings>
 
-class Qkrellm : public QMainWindow
+class sysmon_qt : public QMainWindow
 {
    Q_OBJECT
 
 public:
-   Qkrellm();
-   ~Qkrellm();
+   sysmon_qt();
+   ~sysmon_qt();
 
 public slots:
    void updateFont ( void );
@@ -56,7 +56,7 @@ private:
    QStringList      tempDesc;
    QList< QLabel* > degrees;
 
-   QSettings settings;       // $HOME/.config/LinuxFromScratch/QKrellm.conf
+   QSettings settings;       // $HOME/.config/LinuxFromScratch/sysmon-qt.conf
                              
    QString   font_family;
    int       font_size;

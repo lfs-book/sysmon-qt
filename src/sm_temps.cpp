@@ -1,8 +1,8 @@
-//! \file qk_font.cpp
-#include "Qkrellm.h"
-#include "qk_temps.h"
+//! \file sm_font.cpp
+#include "sysmon-qt.h"
+#include "sm_temps.h"
 
-QK_Temps::QK_Temps() 
+SM_Temps::SM_Temps() 
 {
    // Get current font; second parameter is default
    QString family  = settings.value( "fontFamily", "DejaVu Sans" ).toString();
@@ -21,10 +21,10 @@ QK_Temps::QK_Temps()
    int row = 0;
    tempsLayout = new QGridLayout();
 
-   QLabel* lblInterface = qk_banner( "Interface" );
-   QLabel* lblDevice    = qk_banner( "Device" );
-   QLabel* lblSelected  = qk_banner( "Selected" );
-   QLabel* lblLabel     = qk_banner( "Label" );
+   QLabel* lblInterface = sm_banner( "Interface" );
+   QLabel* lblDevice    = sm_banner( "Device" );
+   QLabel* lblSelected  = sm_banner( "Selected" );
+   QLabel* lblLabel     = sm_banner( "Label" );
    
    tempsLayout->addWidget( lblInterface, row,   0 );
    tempsLayout->addWidget( lblDevice,    row,   1 );
@@ -90,13 +90,13 @@ QK_Temps::QK_Temps()
       cbBox->setChecked( isChecked );
       checkboxes.append( cbBox );
 
-      lblInterface = qk_label( interface );
+      lblInterface = sm_label( interface );
       lblInterface->setFont( font );
 
-      lblDevice    = qk_label( sensor    );
+      lblDevice    = sm_label( sensor    );
       lblDevice->setFont( font );
       
-      QLineEdit* le_label  = qk_lineedit( label, 0 );
+      QLineEdit* le_label  = sm_lineedit( label, 0 );
       lblLabel->setFont( font );
       labels.append( le_label );
 
@@ -107,13 +107,13 @@ QK_Temps::QK_Temps()
    }
 
    // Buttons
-   pb_apply = qk_pushbutton( tr( "Apply" ) );
+   pb_apply = sm_pushbutton( tr( "Apply" ) );
    connect( pb_apply, SIGNAL( clicked() ), SLOT( apply() ) );
 
-   //pb_help = qk_pushbutton( tr( "Help" ) );
+   //pb_help = sm_pushbutton( tr( "Help" ) );
    //connect( pb_help, SIGNAL( clicked() ), SLOT( help() ) );
 
-   pb_exit = qk_pushbutton( tr( "Exit" ) );
+   pb_exit = sm_pushbutton( tr( "Exit" ) );
    connect( pb_exit, SIGNAL( clicked() ), SLOT( close() ) );
 
    QBoxLayout* buttons = new QHBoxLayout();
@@ -126,7 +126,7 @@ QK_Temps::QK_Temps()
    topbox->addLayout( buttons );
 }
 
-void QK_Temps::get_temp_data( void )
+void SM_Temps::get_temp_data( void )
 {  
    QProcess*       process  = new QProcess(this);
    QString         program  = "sensors";
@@ -182,7 +182,7 @@ void QK_Temps::get_temp_data( void )
    }
 }
 
-void QK_Temps::apply()
+void SM_Temps::apply()
 {
    QString group = QString( "temperatures" );
    settings.beginGroup( group );
@@ -215,7 +215,7 @@ void QK_Temps::apply()
    emit updateTemps();
 }
 
-//void QK_Font::help()
+//void SM_Font::help()
 //{
 // US_Help* help = new US_Help();
 // help->show_help( "manual/usfont.html" );

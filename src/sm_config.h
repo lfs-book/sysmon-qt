@@ -1,23 +1,23 @@
-//! \file qk_config.h
+//! \file sm_config.h
 
-#ifndef QKCONFIG_H
-#define QKCONFIG_H
+#ifndef SMCONFIG_H
+#define SMCONFIG_H
 
-#include "qk_widgets.h"
-#include "qk_font.h"
-#include "qk_color.h"
-#include "qk_temps.h"
-#include "QKrellm_version.h"
+#include "sm_widgets.h"
+#include "sm_font.h"
+#include "sm_color.h"
+#include "sm_temps.h"
+#include "version.h"
 
 //! \brief Provide the top level window for user configuration
 
-/*! \class QK_Config
+/*! \class SM_Config
            This class provides the top level window for user configuration.
            It allows customization of the user's Qkrellm display.
            It also provides pushbuttons for access to screens to configure 
            the user's fonts and widget colors.
 */
-class QK_Config : public QK_Widgets
+class SM_Config : public SM_Widgets
 {
   Q_OBJECT
 
@@ -25,8 +25,8 @@ public:
     /*! \brief The constructor creates the various controls for the main
                window.  
     */
-   QK_Config( QWidget* = nullptr );
-   ~QK_Config() {};
+   SM_Config( QWidget* = nullptr );
+   ~SM_Config() {};
   
    QPushButton* pb_apply;
 

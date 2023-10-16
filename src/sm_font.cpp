@@ -1,8 +1,8 @@
-//! \file qk_font.cpp
-#include "Qkrellm.h"
-#include "qk_font.h"
+//! \file sm_font.cpp
+#include "sysmon-qt.h"
+#include "sm_font.h"
 
-QK_Font::QK_Font() 
+SM_Font::SM_Font() 
 {
    // Get current font; second parameter is default
    QString family  = settings.value( "fontFamily", "DejaVu Sans" ).toString();
@@ -19,17 +19,17 @@ QK_Font::QK_Font()
    topbox->setSpacing( 2 );
 
    // Body
-   pb_font = qk_pushbutton( tr( "Select Base Font" ) );
+   pb_font = sm_pushbutton( tr( "Select Base Font" ) );
    topbox->addWidget( pb_font );
    connect( pb_font, SIGNAL( clicked() ), SLOT( selectFont() ) );
 
-   lbl_family = qk_label( tr( "Current Family:" ), -1 );
+   lbl_family = sm_label( tr( "Current Family:" ), -1 );
    lbl_family->setFixedHeight( BUTTON_H );
    
    QGridLayout* lineGrid = new QGridLayout();
 
    QFontDatabase fontLib;; 
-   cb_family = qk_comboBox();
+   cb_family = sm_comboBox();
    cb_family->addItems( fontLib.families() );
    cb_family->setCurrentText( family );
 
@@ -41,17 +41,17 @@ QK_Font::QK_Font()
    lineGrid->addWidget( lbl_family, row  , 0 );
    lineGrid->addWidget( cb_family , row++, 1 );
 
-   lbl_size = qk_label( tr( "Point Size:" ), -1 );
+   lbl_size = sm_label( tr( "Point Size:" ), -1 );
    lbl_size->setFixedHeight( BUTTON_H );
   
-   sb_size = qk_spinBox();
+   sb_size = sm_spinBox();
    sb_size->setRange( 9, 24 );
    sb_size->setValue( size );    
 
    connect( sb_size, SIGNAL( valueChanged ( int ) ),
             this,    SLOT  ( update       ( int ) ) ); 
 
-   ckbox_grid = qk_checkbox( "Bold", ckbox_bold, checked );
+   ckbox_grid = sm_checkbox( "Bold", ckbox_bold, checked );
 
    stats_row = new QHBoxLayout();
    stats_row->addWidget( lbl_size );
@@ -60,40 +60,40 @@ QK_Font::QK_Font()
 
    lineGrid->addLayout( stats_row, row++, 0 );
 
-   samples = qk_banner( tr( "Selected Font Samples:" ) );
+   samples = sm_banner( tr( "Selected Font Samples:" ) );
    lineGrid->addWidget( samples, row++, 0, 1, 2 );
 
-   small = qk_label( tr( "Small Font Sample" ), -1 );
+   small = sm_label( tr( "Small Font Sample" ), -1 );
    lineGrid->addWidget( small, row++, 0, 1, 2 );
 
-   regular = qk_label( tr( "Regular Font Sample" ) );
+   regular = sm_label( tr( "Regular Font Sample" ) );
    lineGrid->addWidget( regular, row++, 0, 1, 2 );
 
-   regularBold = qk_label( tr( "Regular Font Sample, Bold" ), 0, QFont::Bold );
+   regularBold = sm_label( tr( "Regular Font Sample, Bold" ), 0, QFont::Bold );
    lineGrid->addWidget( regularBold, row++, 0, 1, 2 );
 
-   large = qk_label( tr( "Large Font Sample" ), +1 );
+   large = sm_label( tr( "Large Font Sample" ), +1 );
    lineGrid->addWidget( large, row++, 0, 1, 2 );
 
-   largeBold = qk_label( tr( "Large Font Sample, Bold" ), +1, QFont::Bold );
+   largeBold = sm_label( tr( "Large Font Sample, Bold" ), +1, QFont::Bold );
    lineGrid->addWidget( largeBold, row++, 0, 1, 2 );
 
-   title = qk_label( tr( "Title Font Sample" ), +2, QFont::Bold );
+   title = sm_label( tr( "Title Font Sample" ), +2, QFont::Bold );
    lineGrid->addWidget( title, row++, 0, 1, 2 );
 
    topbox->addLayout( lineGrid );
 
-   pb_default = qk_pushbutton( tr( "Select Default" ) );
+   pb_default = sm_pushbutton( tr( "Select Default" ) );
    connect( pb_default, SIGNAL( clicked() ), SLOT( setDefault() ) );
    topbox->addWidget( pb_default );
 
-   pb_apply = qk_pushbutton( tr( "Apply" ) );
+   pb_apply = sm_pushbutton( tr( "Apply" ) );
    connect( pb_apply, SIGNAL( clicked() ), SLOT( apply() ) );
 
-   //pb_help = qk_pushbutton( tr( "Help" ) );
+   //pb_help = sm_pushbutton( tr( "Help" ) );
    //connect( pb_help, SIGNAL( clicked() ), SLOT( help() ) );
 
-   pb_exit = qk_pushbutton( tr( "Exit" ) );
+   pb_exit = sm_pushbutton( tr( "Exit" ) );
    connect( pb_exit, SIGNAL( clicked() ), SLOT( close() ) );
 
    QBoxLayout* buttons = new QHBoxLayout();
@@ -107,19 +107,19 @@ QK_Font::QK_Font()
   redraw();  // Set fonts fot all local widgets
 }
 
-void QK_Font::setDefault( void )
+void SM_Font::setDefault( void )
 {
    cb_family->setCurrentText( "DejaVu Sans" );
    sb_size  ->setValue      ( 12 );
 }
 
-void QK_Font::update( int index )
+void SM_Font::update( int index )
 {
    index++; // So the comiler does not complain about unused parameter
    redraw();
 }
 
-void QK_Font::apply()
+void SM_Font::apply()
 {
    // Set font vales in settings
    settings.setValue( "fontFamily", cb_family->currentText() );
@@ -127,21 +127,16 @@ void QK_Font::apply()
    settings.setValue( "fontBold"  , ckbox_bold->isChecked()  );
    settings.sync();
 
-   //QMessageBox::information( this,
-   //  tr( "Settings Saved" ),
-   //  tr( "The settings were successfully saved.\n"
-   //      "Changes have been applied." ) );
-
    emit updateFonts();
 }
 
-//void QK_Font::help()
+//void SM_Font::help()
 //{
-// US_Help* help = new US_Help();
-// help->show_help( "manual/usfont.html" );
+// SM_Help* help = new SM_Help();
+// help->show_help( "manual/smfont.html" );
 //}
 
-void QK_Font::selectFont()
+void SM_Font::selectFont()
 {
    bool    ok        = false;
    QString family    = cb_family->currentText();
@@ -152,18 +147,14 @@ void QK_Font::selectFont()
 
    if ( ! ok ) return;
 
-//qDebug() << newFont.family() << " " << newFont.pointSize();
-
    cb_family ->setCurrentText ( newFont.family() );
    sb_size   ->setValue       ( newFont.pointSize() );
 }
 
-void QK_Font::redraw( void )
+void SM_Font::redraw( void )
 {
    QString family    = cb_family->currentText();
    int     pointSize = sb_size->value();
-
-//qDebug() << "redraw: " << family << " " << pointSize;
 
    lbl_family  ->setFont( QFont( family, pointSize                  ) );
    cb_family   ->setFont( QFont( family, pointSize                  ) );

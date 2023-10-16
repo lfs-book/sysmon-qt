@@ -1,11 +1,10 @@
-//! \file qk_config.cpp
-//#include <QApplication>
+//! \file sm_config.cpp
 
-#include "qk_config.h"
+#include "sm_config.h"
 
-QK_Config::QK_Config( QWidget* parent )
+SM_Config::SM_Config( QWidget* parent )
 {
-   setWindowTitle( "Qkrellm Configuration" );
+   setWindowTitle( "sysmon-qt Configuration" );
 
    QString family  = settings.value( "fontFamily", "DejaVu Sans" ).toString();
    int     size    = settings.value( "fontSize"  , 12 ).toInt();
@@ -17,7 +16,7 @@ QK_Config::QK_Config( QWidget* parent )
    topbox->setContentsMargins ( 2, 2, 2, 2 );
    topbox->setSpacing         ( 2 );
 
-   version = qk_label( "Version: " QKVERSION );
+   version = sm_label( "Version: " SMVERSION );
    topbox->addWidget( version );
 
    int row = 0;
@@ -27,9 +26,9 @@ QK_Config::QK_Config( QWidget* parent )
    QString timeFormat  = settings.value( "timeFormat", "HH:mm:ss" ).toString();
    bool    timeChecked = settings.value( "useTime",    true       ).toBool();
 
-   QGridLayout* CBTimeLayout = qk_checkbox( "time", CBtime, timeChecked );
-                LEtime       = qk_lineedit( timeFormat );
-                PBtime       = qk_pushbutton( tr( "Help" ) );
+   QGridLayout* CBTimeLayout = sm_checkbox( "time", CBtime, timeChecked );
+                LEtime       = sm_lineedit( timeFormat );
+                PBtime       = sm_pushbutton( tr( "Help" ) );
 
    CBtime->setFont( oldfont );
    LEtime->setFont( oldfont );
@@ -45,9 +44,9 @@ QK_Config::QK_Config( QWidget* parent )
    QString dateFormat  = settings.value( "dateFormat", "ddd d MMM" ).toString();
    bool    dateChecked = settings.value( "useDate",    true        ).toBool();
 
-   QGridLayout* CBDateLayout = qk_checkbox( "date", CBdate, dateChecked );
-                LEdate       = qk_lineedit( dateFormat );
-                PBdate       = qk_pushbutton( tr( "Help" ) );
+   QGridLayout* CBDateLayout = sm_checkbox( "date", CBdate, dateChecked );
+                LEdate       = sm_lineedit( dateFormat );
+                PBdate       = sm_pushbutton( tr( "Help" ) );
 
    CBdate->setFont( oldfont );
    LEdate->setFont( oldfont );
@@ -62,8 +61,8 @@ QK_Config::QK_Config( QWidget* parent )
    // uptime
    bool uptimeChecked = settings.value( "useUptime", true ).toBool();
 
-   QGridLayout* CBuptimeLayout = qk_checkbox( "uptime", CBuptime, uptimeChecked );
-                PBuptime       = qk_pushbutton( tr( "Help" ) );
+   QGridLayout* CBuptimeLayout = sm_checkbox( "uptime", CBuptime, uptimeChecked );
+                PBuptime       = sm_pushbutton( tr( "Help" ) );
 
    CBuptime->setFont( oldfont );
    PBuptime->setFont( oldfont );
@@ -77,9 +76,9 @@ QK_Config::QK_Config( QWidget* parent )
    bool CPUchecked = settings.value( "useCPU",    true ).toBool();
    bool CPUbar     = settings.value( "useCPUbar", true ).toBool();
 
-   QGridLayout* CBcpuLayout    = qk_checkbox( "CPU Load", CBcpu,    CPUchecked );
-   QGridLayout* CBcpuBarLayout = qk_checkbox( "CPU Bar",  CBcpuBar, CPUbar );
-                PBcpu          = qk_pushbutton( tr( "Help" ) );
+   QGridLayout* CBcpuLayout    = sm_checkbox( "CPU Load", CBcpu,    CPUchecked );
+   QGridLayout* CBcpuBarLayout = sm_checkbox( "CPU Bar",  CBcpuBar, CPUbar );
+                PBcpu          = sm_pushbutton( tr( "Help" ) );
 
    CBcpu   ->setFont( oldfont );
    CBcpuBar->setFont( oldfont );
@@ -94,8 +93,8 @@ QK_Config::QK_Config( QWidget* parent )
    // Memory display
    bool memoryChecked = settings.value( "useMemory", true ).toBool();
 
-   QGridLayout* CBmemoryLayout = qk_checkbox( "Memory Bar", CBmemory, memoryChecked );
-                PBmemory       = qk_pushbutton( tr( "Help" ) );
+   QGridLayout* CBmemoryLayout = sm_checkbox( "Memory Bar", CBmemory, memoryChecked );
+                PBmemory       = sm_pushbutton( tr( "Help" ) );
 
    CBmemory->setFont( oldfont );
    PBmemory->setFont( oldfont );
@@ -112,37 +111,37 @@ QK_Config::QK_Config( QWidget* parent )
    QGridLayout* otherSettings = new QGridLayout();
 
    // Font Preferences
-   lbl_font = qk_label(      tr( "Font Preferences:" ) );
-   pb_font  = qk_pushbutton( tr( "Change Font"       ) );
+   lbl_font = sm_label(      tr( "Font Preferences:" ) );
+   pb_font  = sm_pushbutton( tr( "Change Font"       ) );
 
    otherSettings->addWidget( lbl_font, row,   0 );
    otherSettings->addWidget( pb_font,  row++, 1 );
    connect( pb_font, SIGNAL( clicked() ), this, SLOT( update_font() ) );
 
    // Color Preferences
-   lbl_color = qk_label(      tr( "Color Preferences:" ) );
-   pb_color  = qk_pushbutton( tr( "Change Colors"      ) );
+   lbl_color = sm_label(      tr( "Color Preferences:" ) );
+   pb_color  = sm_pushbutton( tr( "Change Colors"      ) );
 
    otherSettings->addWidget( lbl_color, row,   0 );
    otherSettings->addWidget( pb_color,  row++, 1 );
    connect( pb_color, SIGNAL( clicked() ), this, SLOT( update_colors() ) );
 
    // Temperature Preferences
-   lbl_temps = qk_label(      tr( "Temperature Preferences:" ) );
-   pb_temps  = qk_pushbutton( tr( "Change Temps"             ) );
+   lbl_temps = sm_label(      tr( "Temperature Preferences:" ) );
+   pb_temps  = sm_pushbutton( tr( "Change Temps"             ) );
 
    otherSettings->addWidget( lbl_temps, row,   0 );
    otherSettings->addWidget( pb_temps,  row++, 1 );
    connect( pb_temps, SIGNAL( clicked() ), this, SLOT( update_temps() ) );
 
    // Pushbuttons
-   //pb_help = qk_pushbutton( tr( "Help" ) );
+   //pb_help = sm_pushbutton( tr( "Help" ) );
    //connect( pb_help, SIGNAL( clicked() ), this, SLOT( help() ) );
    
-   pb_apply = qk_pushbutton( tr( "Apply" ) );
+   pb_apply = sm_pushbutton( tr( "Apply" ) );
    connect( pb_apply, SIGNAL( clicked() ), this, SLOT( apply() ) );
 
-   pb_exit = qk_pushbutton( tr( "Exit" ) );
+   pb_exit = sm_pushbutton( tr( "Exit" ) );
    connect( pb_exit, SIGNAL( clicked() ), this, SLOT( close() ) );
 
    QBoxLayout* buttons = new QHBoxLayout();
@@ -169,13 +168,13 @@ QK_Config::QK_Config( QWidget* parent )
    this->move( newx, parentGeom.y() );
 }
 
-//void QK_Config::help( void )
+//void SM_Config::help( void )
 //{
 //  showhelp.show_help( "config.html" );
 //}
 
 // Relay response from update_font()
-void QK_Config::sendFonts( void )
+void SM_Config::sendFonts( void )
 {
    // Update fonts here also 
    update_local();
@@ -183,7 +182,7 @@ void QK_Config::sendFonts( void )
 }
 
 // Display time help info
-void QK_Config::time_help( void )
+void SM_Config::time_help( void )
 {
    QString* text = new QString(
          "Select how time is displayed.\n"
@@ -204,7 +203,7 @@ void QK_Config::time_help( void )
 }
 
 // Display date help info
-void QK_Config::date_help( void )
+void SM_Config::date_help( void )
 {
    QString* text = new QString(
          "Select how date is displayed.\n"
@@ -224,7 +223,7 @@ void QK_Config::date_help( void )
 }
 
 // Display cpu help info
-void QK_Config::cpu_help( void )
+void SM_Config::cpu_help( void )
 {
    QString* text = new QString(
          "Select whether CPU Load and/or CPU Progress bar is displayed." );
@@ -233,7 +232,7 @@ void QK_Config::cpu_help( void )
 }
 
 // Display uptime help info
-void QK_Config::uptime_help( void )
+void SM_Config::uptime_help( void )
 {
    QString* text = new QString(
          "Select whether uptime is displayed." );
@@ -242,7 +241,7 @@ void QK_Config::uptime_help( void )
 }
 
 // Display memory usage help info
-void QK_Config::memory_help( void )
+void SM_Config::memory_help( void )
 {
    QString* text = new QString(
          "Select whether memory usage is displayed." );
@@ -251,7 +250,7 @@ void QK_Config::memory_help( void )
 }
 
 // Present text in a QMessageBox with specified width in characters
-void QK_Config::msg_box( QString* text, int width )
+void SM_Config::msg_box( QString* text, int width )
 {
    // Trying to get the message box wider than about 60 characters 
    // does not seem to work
@@ -269,42 +268,42 @@ void QK_Config::msg_box( QString* text, int width )
 }
 
 // Relay response from update_colors()
-void QK_Config::sendColors( void )
+void SM_Config::sendColors( void )
 {
-   //QMessageBox::information(this, "Test", "qk_config received update colors" );
+   //QMessageBox::information(this, "Test", "sm_config received update colors" );
    emit updateColors();
 }
 
 // Relay response from update_Temps()
-void QK_Config::sendTemps( void )
+void SM_Config::sendTemps( void )
 {
-   //QMessageBox::information(this, "Test", "qk_config received update temps" );
+   //QMessageBox::information(this, "Test", "sm_config received update temps" );
    emit updateTemps();
 }
 
-void QK_Config::update_font( void )
+void SM_Config::update_font( void )
 {
-   QK_Font* font = new QK_Font();  
+   SM_Font* font = new SM_Font();  
    font->show();
    connect( font, SIGNAL( updateFonts() ), this, SLOT( sendFonts() ) );
 }
 
-void QK_Config::update_colors( void )
+void SM_Config::update_colors( void )
 {
-   QK_Color* colors = new QK_Color();  
+   SM_Color* colors = new SM_Color();  
    //colors->setModality( Qt::WindowModal );  
    colors->show();
    connect( colors, SIGNAL( updateColors() ), this, SLOT( sendColors() ) );
 }
 
-void QK_Config::update_temps( void )
+void SM_Config::update_temps( void )
 {
-   QK_Temps* temps = new QK_Temps();  
+   SM_Temps* temps = new SM_Temps();  
    temps->show();
    connect( temps, SIGNAL( updateTemps() ), this, SLOT( sendTemps() ) );
 }
 
-void QK_Config::update_local( void )
+void SM_Config::update_local( void )
 {
    // Update local widgets
 
@@ -339,7 +338,7 @@ void QK_Config::update_local( void )
    lbl_temps->setFont( font );
 }
 
-void QK_Config::apply( void )
+void SM_Config::apply( void )
 {
    settings.setValue( "useTime",   CBtime->isChecked()   );
    settings.setValue( "useDate",   CBdate->isChecked()   );

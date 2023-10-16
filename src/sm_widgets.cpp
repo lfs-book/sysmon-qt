@@ -1,17 +1,15 @@
 //! \file us_widgets.cpp
-//#include <QtSvg> 
 
-#include "qk_widgets.h"
+#include "sm_widgets.h"
 
-QK_Widgets::QK_Widgets()
+SM_Widgets::SM_Widgets()
 {
-
    font = QFont( settings.value( "fontFamily", "DejaVu Sans" ).toString(), 
                  settings.value( "fontSize"  , 12 ).toInt() );
 }
 
 // label
-QLabel* QK_Widgets::qk_label( const QString& labelString, int fontAdjust, int weight )
+QLabel* SM_Widgets::sm_label( const QString& labelString, int fontAdjust, int weight )
 {
    QLabel* newLabel = new QLabel( labelString, this );
 
@@ -30,15 +28,15 @@ QLabel* QK_Widgets::qk_label( const QString& labelString, int fontAdjust, int we
 }
 
 // textlabel ( fontAdjust defaults to smaller font (-1) if not specified )
-QLabel* QK_Widgets::qk_textlabel( const QString& labelString, int fontAdjust, int weight )
+QLabel* SM_Widgets::sm_textlabel( const QString& labelString, int fontAdjust, int weight )
 {
-   return qk_label( labelString, fontAdjust, weight );
+   return sm_label( labelString, fontAdjust, weight );
 }
 
 // banner ( defaults to Bold if weight not specified )
-QLabel* QK_Widgets::qk_banner( const QString& labelString, int fontAdjust, int weight )
+QLabel* SM_Widgets::sm_banner( const QString& labelString, int fontAdjust, int weight )
 {
-   QLabel* newLabel = qk_label( labelString, fontAdjust, weight );
+   QLabel* newLabel = sm_label( labelString, fontAdjust, weight );
 
    newLabel->setAlignment ( Qt::AlignCenter );
    newLabel->setFrameStyle( QFrame::WinPanel | QFrame::Raised );
@@ -49,7 +47,7 @@ QLabel* QK_Widgets::qk_banner( const QString& labelString, int fontAdjust, int w
 }
 
 // pushbutton
-QPushButton* QK_Widgets::qk_pushbutton( const QString& labelString, bool enabled,
+QPushButton* SM_Widgets::sm_pushbutton( const QString& labelString, bool enabled,
                                         int fontAdjust )
 {
    QPushButton* button = new QPushButton( tr( labelString.toLatin1() ), this );
@@ -68,7 +66,7 @@ QPushButton* QK_Widgets::qk_pushbutton( const QString& labelString, bool enabled
 }
 
 // SpinBox
-QSpinBox* QK_Widgets::qk_spinBox( const int fontAdjust )
+QSpinBox* SM_Widgets::sm_spinBox( const int fontAdjust )
 {
    QSpinBox* sbox = new QSpinBox( this );
 
@@ -82,7 +80,7 @@ QSpinBox* QK_Widgets::qk_spinBox( const int fontAdjust )
 }
 
 // Combo Box
-QComboBox* QK_Widgets::qk_comboBox( void )
+QComboBox* SM_Widgets::sm_comboBox( void )
 {
   QComboBox* cb = new QComboBox( this );
 
@@ -93,7 +91,7 @@ QComboBox* QK_Widgets::qk_comboBox( void )
 }
 
 // checkbox
-QGridLayout* QK_Widgets::qk_checkbox( 
+QGridLayout* SM_Widgets::sm_checkbox( 
       const QString& text, QCheckBox*& cb, bool state )
 {
    QFont thisFont = font;
@@ -123,7 +121,7 @@ QGridLayout* QK_Widgets::qk_checkbox(
 }
 
 // lineedit
-QLineEdit* QK_Widgets::qk_lineedit( const QString& text, int fontAdjust,
+QLineEdit* SM_Widgets::sm_lineedit( const QString& text, int fontAdjust,
       bool readonly )
 {
    QLineEdit* le = new QLineEdit( this );

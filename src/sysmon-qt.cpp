@@ -8,8 +8,8 @@
 #include <QTimer>
 // #include <QMessageBox>
 
-#include "Qkrellm.h"
-#include "qk_config.h"
+#include "sysmon-qt.h"
+#include "sm_config.h"
 
 int main(int argc, char *argv[])
 {  
@@ -17,16 +17,16 @@ int main(int argc, char *argv[])
            
    QApplication a(argc, argv);
    QCoreApplication::setOrganizationName("LinuxFromScratch");
-   QCoreApplication::setApplicationName("QKrellm");
+   QCoreApplication::setApplicationName("sysmon-qt");
    QCoreApplication::setApplicationVersion(QT_VERSION_STR);
 
-   Qkrellm mainWin;
+   sysmon_qt mainWin;
    mainWin.show();
 
    return a.exec();
 }  
 
-Qkrellm::Qkrellm()
+sysmon_qt::sysmon_qt()
 {
    //mFrame = false;
    setFrame();
@@ -42,7 +42,7 @@ Qkrellm::Qkrellm()
    // timer
    QTimer* timer = new QTimer(this);
    timer->setInterval(1000);
-   connect(timer, &QTimer::timeout, this, QOverload<>::of(&Qkrellm::update));
+   connect(timer, &QTimer::timeout, this, QOverload<>::of(&sysmon_qt::update));
    timer->start();
 
    // actions 
@@ -58,7 +58,7 @@ Qkrellm::Qkrellm()
 
    QAction* frameAction = new QAction( tr("F&rame"), this );
    frameAction->setShortcut( tr("Ctrl+F") );
-   connect( frameAction, &QAction::triggered, this, &Qkrellm::changeFrame );
+   connect( frameAction, &QAction::triggered, this, &sysmon_qt::changeFrame );
    addAction( frameAction );
 
    // Start layout   
@@ -89,10 +89,10 @@ Qkrellm::Qkrellm()
    }
 
    setContextMenuPolicy(Qt::ActionsContextMenu);  // Add actions for right click
-   setWindowTitle(tr("Qkrellm"));
+   setWindowTitle(tr("sysmon_qt"));
 }
 
-Qkrellm::~Qkrellm()
+sysmon_qt::~sysmon_qt()
 {
    position = this->pos();
    settings.setValue( "positionX", QString::number( position.x() ) );
@@ -100,7 +100,7 @@ Qkrellm::~Qkrellm()
    settings.sync();
 }
 
-void Qkrellm::setup_all()
+void sysmon_qt::setup_all()
 {
    tick = 0;
    setup_time   ();
@@ -118,7 +118,7 @@ void Qkrellm::setup_all()
    }
 }
 
-void Qkrellm::setup_time()
+void sysmon_qt::setup_time()
 {
    lbl_time = nullptr;
    if ( ! settings.value( "useTime", true ).toBool() ) return;
@@ -128,7 +128,7 @@ void Qkrellm::setup_time()
    update_time();
 }
 
-void Qkrellm::update_time( void )
+void sysmon_qt::update_time( void )
 {
    if ( lbl_time == nullptr ) return; 
 
@@ -139,7 +139,7 @@ void Qkrellm::update_time( void )
    lbl_time->setText( time.toString( format ) );
 } 
 
-void Qkrellm::setup_date()
+void sysmon_qt::setup_date()
 {
    lbl_date = nullptr;
    if ( ! settings.value( "useDate", true ).toBool() ) return;
@@ -149,7 +149,7 @@ void Qkrellm::setup_date()
    update_date();
 }
 
-void Qkrellm::update_date( void )
+void sysmon_qt::update_date( void )
 {
    if ( lbl_date  == nullptr ) return;  
    if ( tick % 60 != 0       ) return;  // Update once a minute
@@ -163,7 +163,7 @@ void Qkrellm::update_date( void )
    lbl_date->setText( date );
 } 
 
-void Qkrellm::setup_uptime()
+void sysmon_qt::setup_uptime()
 {
    lbl_uptime = nullptr;
    if ( ! settings.value( "useUptime", true ).toBool() ) return;
@@ -173,7 +173,7 @@ void Qkrellm::setup_uptime()
    update_uptime();
 }
 
-void Qkrellm::update_uptime( void )
+void sysmon_qt::update_uptime( void )
 {
    if ( lbl_uptime == nullptr ) return;
    if ( tick % 60  != 0       ) return;  // Update once a minute
@@ -199,7 +199,7 @@ void Qkrellm::update_uptime( void )
    lbl_uptime->setText( uptime );
 } 
 
-void Qkrellm::setup_cpuLoad()
+void sysmon_qt::setup_cpuLoad()
 {
    bool useCPU    = settings.value( "useCPU",    true ).toBool();
    bool useCPUbar = settings.value( "useCPUbar", true ).toBool();
@@ -240,28 +240,30 @@ void Qkrellm::setup_cpuLoad()
    update_cpu();
 }
 
-void Qkrellm::update_cpu( void )
+void sysmon_qt::update_cpu( void )
 {
-   if ( lbl_loads == nullptr    ) return;
    if ( tick % cpu_refresh != 0 ) return;
 
-   QFile file( "/proc/loadavg" );
-   file.open( QIODevice::ReadOnly | QIODevice::Text);
-   QByteArray ba2 = file.readLine();
-   file.close();
+   if ( lbl_loads != nullptr )
+   {
+      QFile file( "/proc/loadavg" );
+      file.open( QIODevice::ReadOnly | QIODevice::Text);
+      QByteArray ba2 = file.readLine();
+      file.close();
 
-   QString lineString   = QString( ba2 );
-   QStringList loadList = lineString.split( QLatin1Char(' ') );
-   QString CPU_loads    = loadList[0] + " " +
-                          loadList[1] + " " +
-                          loadList[2];
+      QString lineString   = QString( ba2 );
+      QStringList loadList = lineString.split( QLatin1Char(' ') );
+      QString CPU_loads    = loadList[0] + " " +
+                             loadList[1] + " " +
+                             loadList[2];
+      lbl_loads->setText( CPU_loads );
+   }
 
-   load->setValue( cpuPercentage );
-
-   lbl_loads->setText( CPU_loads );
+   if ( load != nullptr )
+      load->setValue( cpuPercentage );
 } 
 
-void Qkrellm::setup_memory()
+void sysmon_qt::setup_memory()
 {
    lbl_memory = nullptr;
    if ( ! settings.value( "useMemory", true ).toBool() ) return;
@@ -288,7 +290,7 @@ void Qkrellm::setup_memory()
    update_memory();
 }
 
-void Qkrellm::update_memory( void )
+void sysmon_qt::update_memory( void )
 {
    if ( lbl_memory            == nullptr ) return;
    if ( tick % memory_refresh != 0       ) return;
@@ -324,7 +326,7 @@ void Qkrellm::update_memory( void )
    memory->setValue( percent );
 }
 
-QGridLayout* Qkrellm::set_tempsLayout( void)
+QGridLayout* sysmon_qt::set_tempsLayout( void)
 {
    settings.beginGroup( "temperatures" );
    QStringList keys = settings.childKeys();
@@ -362,7 +364,7 @@ QGridLayout* Qkrellm::set_tempsLayout( void)
    return tempsLayout;
 }
 
-void Qkrellm::setFrame()
+void sysmon_qt::setFrame()
 {
    if ( mFrame )
      setWindowFlags( Qt::Window );  // Turn on frame
@@ -370,14 +372,14 @@ void Qkrellm::setFrame()
      setWindowFlags( Qt::Window | Qt::FramelessWindowHint ); //Frame off
 }
 
-void Qkrellm::changeFrame()
+void sysmon_qt::changeFrame()
 {
    mFrame = ! mFrame;
    setFrame();
    show();
 }
 
-QLabel* Qkrellm::label( const QString& labelString, int fontAdjust, int weight )
+QLabel* sysmon_qt::label( const QString& labelString, int fontAdjust, int weight )
 {
    QLabel* newLabel = new QLabel( labelString, this );
   
@@ -398,7 +400,7 @@ QLabel* Qkrellm::label( const QString& labelString, int fontAdjust, int weight )
 }
 
 // textlabel ( defaults to smaller font and changes text colors )
-QLabel* Qkrellm::textlabel( const QString& labelString, int fontAdjust, int weight )
+QLabel* sysmon_qt::textlabel( const QString& labelString, int fontAdjust, int weight )
 {
   QLabel* newLabel = label( labelString, fontAdjust, weight );
 
@@ -408,7 +410,7 @@ QLabel* Qkrellm::textlabel( const QString& labelString, int fontAdjust, int weig
 }
 
 // banner ( defaults to Bold and changes text colors )
-QLabel* Qkrellm::banner( const QString& labelString, int fontAdjust, int weight )
+QLabel* sysmon_qt::banner( const QString& labelString, int fontAdjust, int weight )
 {
   QLabel* newLabel = label( labelString, fontAdjust, weight );
 
@@ -422,9 +424,9 @@ QLabel* Qkrellm::banner( const QString& labelString, int fontAdjust, int weight 
   return newLabel;
 }
 
-void Qkrellm::config( void )
+void sysmon_qt::config( void )
 {
-   QK_Config* w = new QK_Config( this );
+   SM_Config* w = new SM_Config( this );
    w->show();
    connect( w, SIGNAL( updateFonts  () ), this, SLOT( updateFont()   ) );
    connect( w, SIGNAL( updateColors () ), this, SLOT( updateColor()  ) );
@@ -432,7 +434,7 @@ void Qkrellm::config( void )
    connect( w, SIGNAL( updateEntries() ), this, SLOT( updateLayout() ) );
 }
 
-void Qkrellm::updateFont( void )
+void sysmon_qt::updateFont( void )
 {
    font_family = settings.value( "fontFamily", "DejaVu Sans" ).toString();
    font_size   = settings.value( "fontSize"  , 12 ).toInt();
@@ -449,7 +451,7 @@ void Qkrellm::updateFont( void )
    setup_all();
 }
 
-void Qkrellm::set_palettes( void )
+void sysmon_qt::set_palettes( void )
 {
    QPalette p;
 
@@ -474,7 +476,7 @@ void Qkrellm::set_palettes( void )
    data_palette = p;
 }
 
-void Qkrellm::updateColor( void )
+void sysmon_qt::updateColor( void )
 {
    set_palettes();
    lbl_hostname->setPalette( banner_palette );
@@ -482,7 +484,7 @@ void Qkrellm::updateColor( void )
    setup_all();
 }
 
-void Qkrellm::updateTemp( void )
+void sysmon_qt::updateTemp( void )
 {
    // Delete the current temp layout
    delete_temps();
@@ -497,7 +499,7 @@ void Qkrellm::updateTemp( void )
    update_temps();
 }
 
-void Qkrellm::delete_temps( void )
+void sysmon_qt::delete_temps( void )
 {
    // First stop updating temperatures
    pauseTempUpdate = true;
@@ -517,7 +519,7 @@ void Qkrellm::delete_temps( void )
    tempsLayout = nullptr;
 }
 
-void Qkrellm::updateLayout( void )
+void sysmon_qt::updateLayout( void )
 {
    pauseUpdate = true;
    delete_all();
@@ -527,7 +529,7 @@ void Qkrellm::updateLayout( void )
    pauseUpdate = false;
 }
 
-void Qkrellm::delete_all( void )
+void sysmon_qt::delete_all( void )
 {
   // First delete temps
   delete_temps(); 
@@ -551,7 +553,7 @@ void Qkrellm::delete_all( void )
   lbl_memory   = nullptr; 
 }
 
-void Qkrellm::update( void )
+void sysmon_qt::update( void )
 {
    update_cpu_percentage();
    if ( pauseUpdate ) return;
@@ -581,7 +583,7 @@ void Qkrellm::update( void )
    and get the delta from the previous iteration.  The load 
    percentage then is just ((work-oldwork)/(total-oldtotal)) * 100.
 */
-void Qkrellm::update_cpu_percentage( void )
+void sysmon_qt::update_cpu_percentage( void )
 {
    // We do this every second for now.
    // Could possibly do it every cpu_refresh time (3 seconds for now)
@@ -623,7 +625,7 @@ void Qkrellm::update_cpu_percentage( void )
    previousJiffiesTotal = total;
 }
 
-void Qkrellm::update_temps( void )
+void sysmon_qt::update_temps( void )
 {
    if ( pauseTempUpdate ) return;
 

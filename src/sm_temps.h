@@ -1,21 +1,21 @@
 //! \file us_font.h
-#ifndef QK_TEMPS_H
-#define QK_TEMPS_H
+#ifndef SM_TEMPS_H
+#define SM_TEMPS_H
 
-#include "qk_widgets.h"
-#include "qk_config.h"
+#include "sm_widgets.h"
+#include "sm_config.h"
 
 //!  A class to allow the user to select a customized font.
-class QK_Temps : public QK_Widgets
+class SM_Temps : public SM_Widgets
 {
   Q_OBJECT
   
   public:
     //*! \brief Construct the window for font selection
-    QK_Temps();
+    SM_Temps();
     
     //! \brief A null destructor.
-    ~QK_Temps() {};
+    ~SM_Temps() {};
 
     QPushButton* pb_apply;
 

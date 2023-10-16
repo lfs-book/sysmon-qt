@@ -1,8 +1,8 @@
-//! \file qk_font.cpp
-#include "Qkrellm.h"
-#include "qk_font.h"
+//! \file sm_font.cpp
+#include "sysmon-qt.h"
+#include "sm_font.h"
 
-QK_Color::QK_Color() 
+SM_Color::SM_Color() 
 {
    // Get current font; second parameter is default
    QString family  = settings.value( "fontFamily", "DejaVu Sans" ).toString();
@@ -19,39 +19,39 @@ QK_Color::QK_Color()
    // Label color
    QGridLayout* labelLayout = new QGridLayout();
 
-   pb_label_color = qk_pushbutton( tr( "Change\nLabel Color" ) );
+   pb_label_color = sm_pushbutton( tr( "Change\nLabel Color" ) );
    labelLayout->addWidget( pb_label_color, 0, 0 );
    connect( pb_label_color, SIGNAL( clicked() ), SLOT( label_color() ) );
 
-   pb_label_background = qk_pushbutton( tr( "Change\nLabel Background" ) );
+   pb_label_background = sm_pushbutton( tr( "Change\nLabel Background" ) );
    labelLayout->addWidget( pb_label_background, 0 , 1 );
    connect( pb_label_background, SIGNAL( clicked() ), SLOT( label_background() ) );
 
-   sample_label = qk_label( "Sample Label" );
+   sample_label = sm_label( "Sample Label" );
    sample_label->setFont( QFont( family, size, weight ) );
    labelLayout->addWidget( sample_label, 0, 2 );
 
    // Data color
-   pb_data_color = qk_pushbutton( tr( "Change\nData Color" ) );
+   pb_data_color = sm_pushbutton( tr( "Change\nData Color" ) );
    labelLayout->addWidget( pb_data_color, 1, 0 );
    connect( pb_data_color, SIGNAL( clicked() ), SLOT( data_color() ) );
 
-   pb_data_background = qk_pushbutton( tr( "Change\nData Background" ) );
+   pb_data_background = sm_pushbutton( tr( "Change\nData Background" ) );
    labelLayout->addWidget( pb_data_background, 1, 1 );
    connect( pb_data_background, SIGNAL( clicked() ), SLOT( data_background() ) );
 
-   sample_data = qk_label( "Sample Data" );
+   sample_data = sm_label( "Sample Data" );
    sample_data->setFont( QFont( family, size, weight ) );
    labelLayout->addWidget( sample_data, 1, 2 );
 
    //topbox->addLayout( labelLayout );
 
    // ProgressBar color
-   pb_progress_color = qk_pushbutton( tr( "Change\nProgress Color" ) );
+   pb_progress_color = sm_pushbutton( tr( "Change\nProgress Color" ) );
    labelLayout->addWidget( pb_progress_color, 2, 0 );
    connect( pb_progress_color, SIGNAL( clicked() ), SLOT( progress_color() ) );
 
-   pb_progress_background = qk_pushbutton( tr( "Change\nProgress Background" ) );
+   pb_progress_background = sm_pushbutton( tr( "Change\nProgress Background" ) );
    labelLayout->addWidget( pb_progress_background, 2, 1 );
    connect( pb_progress_background, SIGNAL( clicked() ), SLOT( progress_background() ) );
 
@@ -65,18 +65,18 @@ QK_Color::QK_Color()
 
    // Default
 
-   pb_default = qk_pushbutton( tr( "Set Default Colors" ) );
+   pb_default = sm_pushbutton( tr( "Set Default Colors" ) );
    connect( pb_default, SIGNAL( clicked() ), SLOT( setDefault() ) );
    topbox->addWidget( pb_default );
    
    // Buttons
-   pb_apply = qk_pushbutton( tr( "Apply" ) );
+   pb_apply = sm_pushbutton( tr( "Apply" ) );
    connect( pb_apply, SIGNAL( clicked() ), SLOT( apply() ) );
 
-   //pb_help = qk_pushbutton( tr( "Help" ) );
+   //pb_help = sm_pushbutton( tr( "Help" ) );
    //connect( pb_help, SIGNAL( clicked() ), SLOT( help() ) );
 
-   pb_exit = qk_pushbutton( tr( "Exit" ) );
+   pb_exit = sm_pushbutton( tr( "Exit" ) );
    connect( pb_exit, SIGNAL( clicked() ), SLOT( close() ) );
 
    QBoxLayout* buttons = new QHBoxLayout();
@@ -90,7 +90,7 @@ QK_Color::QK_Color()
    redraw();  // Set colors for examples
 }
 
-void QK_Color::setDefault( void )
+void SM_Color::setDefault( void )
 {
    QPalette p = sample_label->palette();
 
@@ -109,7 +109,7 @@ void QK_Color::setDefault( void )
    sample_progress->setPalette( p );
 }
 
-void QK_Color::label_color( void )
+void SM_Color::label_color( void )
 {
    QPalette p = sample_label->palette();
                                       // Background is QPalette::Window
@@ -123,7 +123,7 @@ void QK_Color::label_color( void )
    sample_label->setPalette( p );
 }
 
-void QK_Color::label_background( void )
+void SM_Color::label_background( void )
 {
    QPalette p = sample_label->palette();
                                       // Background is QPalette::Window
@@ -137,7 +137,7 @@ void QK_Color::label_background( void )
    sample_label->setPalette( p );
 }
 
-void QK_Color::data_color( void )
+void SM_Color::data_color( void )
 {
    QPalette p = sample_data->palette();
                                       // Background is QPalette::Window
@@ -151,7 +151,7 @@ void QK_Color::data_color( void )
    sample_data->setPalette( p );
 }
 
-void QK_Color::data_background( void )
+void SM_Color::data_background( void )
 {
    QPalette p = sample_data->palette();
                                       // Background is QPalette::Window
@@ -165,7 +165,7 @@ void QK_Color::data_background( void )
    sample_data->setPalette( p );
 }
 
-void QK_Color::progress_color( void )
+void SM_Color::progress_color( void )
 {
    QPalette p = sample_progress->palette();
                                       // Background is QPalette::Window
@@ -179,7 +179,7 @@ void QK_Color::progress_color( void )
    sample_progress->setPalette( p );
 }
 
-void QK_Color::progress_background( void )
+void SM_Color::progress_background( void )
 {
    QPalette p = sample_progress->palette();
                                       // Background is QPalette::Window
@@ -193,13 +193,13 @@ void QK_Color::progress_background( void )
    sample_progress->setPalette( p );
 }
 
-void QK_Color::update( int index )
+void SM_Color::update( int index )
 {
    index++; // So the comiler does not complain about unused parameter
    redraw();
 }
 
-void QK_Color::apply()
+void SM_Color::apply()
 {
    QPalette p          = sample_label->palette();
    QColor   text       = p.color( QPalette::Active, QPalette::WindowText );
@@ -227,13 +227,13 @@ void QK_Color::apply()
    emit updateColors();
 }
 
-//void QK_Font::help()
+//void SM_Font::help()
 //{
 // US_Help* help = new US_Help();
 // help->show_help( "manual/usfont.html" );
 //}
 
-void QK_Color::redraw( void )
+void SM_Color::redraw( void )
 {
    QString lblFg      = settings.value( "labelColor",    "#000000").toString();
    QString lblBg      = settings.value( "labelBg",       "#ffffff").toString();
