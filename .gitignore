@@ -33,7 +33,7 @@
 
 moc*
 *Make*
-Qkrellm
+src/sysmon-qt
 *.sav*
 notes
 *.swp
