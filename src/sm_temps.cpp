@@ -142,7 +142,7 @@ void SM_Temps::get_temp_data( void )
    QJsonObject     root       = doc.object();
    int             count      = root.count();  // The number of interfaces
    QStringList     interfaces = root.keys();   // keys are interface names
-   QRegExp         rx( ".*_input$" );
+   QRegularExpression rx      = QRegularExpression( ".*_input$" );
       
    for ( int i = 0; i < count; i++ )
    {  

@@ -9,7 +9,7 @@ HEADERS += sysmon-qt.h  \
            sm_color.h   \
            sm_font.h    \
            sm_temps.h   \
-			  version.h
+           version.h
 
 SOURCES += sysmon-qt.cpp  \
            sm_widgets.cpp \

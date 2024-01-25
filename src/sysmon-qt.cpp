@@ -1,17 +1,19 @@
 #include <QAction>
 #include <QApplication>
 #include <QDateTime>
+#include <QFile>
 #include <QHostInfo>
 #include <QRegularExpression>
 #include <QTime>
 #include <QTimer>
+// #include <QMessageBox>
 
 #include "sysmon-qt.h"
 #include "sm_config.h"
 
 int main(int argc, char *argv[])
 {  
-   QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+   //QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
            
    QApplication a(argc, argv);
    QCoreApplication::setOrganizationName("LinuxFromScratch");
@@ -33,19 +35,6 @@ sysmon_qt::sysmon_qt()
    font_family = settings.value( "fontFamily", "DejaVu Sans" ).toString();
    font_size   = settings.value( "fontSize"  , 12 ).toInt();
    font_normal = QFont( font_family, font_size );
-
-   // Files
-   fUptime  = new QFile( "/proc/uptime" );
-   fUptime ->open( QIODevice::ReadOnly | QIODevice::Text);
-   
-   fLoadAvg = new QFile( "/proc/loadavg" );
-   fLoadAvg->open( QIODevice::ReadOnly | QIODevice::Text);
-   
-   fMemInfo = new QFile( "/proc/meminfo" );
-   fMemInfo->open( QIODevice::ReadOnly | QIODevice::Text);
-   
-   fStat    = new QFile( "/proc/stat" );
-   fStat   ->open( QIODevice::ReadOnly | QIODevice::Text);
 
    // Set up palettes
    set_palettes();
@@ -109,11 +98,6 @@ sysmon_qt::~sysmon_qt()
    settings.setValue( "positionX", QString::number( position.x() ) );
    settings.setValue( "positionY", QString::number( position.y() ) );
    settings.sync();
-
-   if ( fUptime ->isOpen() ) fUptime ->close();
-   if ( fLoadAvg->isOpen() ) fLoadAvg->close();
-   if ( fMemInfo->isOpen() ) fMemInfo->close();
-   if ( fStat   ->isOpen() ) fStat   ->close();
 }
 
 void sysmon_qt::setup_all()
@@ -194,10 +178,12 @@ void sysmon_qt::update_uptime( void )
    if ( lbl_uptime == nullptr ) return;
    if ( tick % 60  != 0       ) return;  // Update once a minute
 
-   fUptime->seek( 0 );
-   QByteArray baUptime = fUptime->readLine();
+   QFile file( "/proc/uptime" );
+   file.open( QIODevice::ReadOnly | QIODevice::Text);
+   QByteArray ba = file.readLine();
+   file.close();
 
-   QString lineString = QString( baUptime );
+   QString lineString = QString( ba );
    QString upSecs = lineString.left( lineString.indexOf(".") );
    
    uint secs    = upSecs.toInt();
@@ -218,8 +204,7 @@ void sysmon_qt::setup_cpuLoad()
    bool useCPU    = settings.value( "useCPU",    true ).toBool();
    bool useCPUbar = settings.value( "useCPUbar", true ).toBool();
    
-   lbl_cpu   = nullptr;
-   lbl_loads = nullptr;
+   lbl_cpu = nullptr;
    
    if ( ! useCPU && ! useCPUbar ) return;
 
@@ -234,7 +219,6 @@ void sysmon_qt::setup_cpuLoad()
       load = new QProgressBar();
       load->setRange( 0, 100 );
       load->setValue( 0 );
-      load->setFont ( font_normal );
 
       // Set palette
       QPalette p = load->palette();
@@ -262,10 +246,12 @@ void sysmon_qt::update_cpu( void )
 
    if ( lbl_loads != nullptr )
    {
-      fLoadAvg->seek( 0 );
-      QByteArray ba = fLoadAvg->readLine();
+      QFile file( "/proc/loadavg" );
+      file.open( QIODevice::ReadOnly | QIODevice::Text);
+      QByteArray ba2 = file.readLine();
+      file.close();
 
-      QString lineString   = QString( ba );
+      QString lineString   = QString( ba2 );
       QStringList loadList = lineString.split( QLatin1Char(' ') );
       QString CPU_loads    = loadList[0] + " " +
                              loadList[1] + " " +
@@ -284,7 +270,6 @@ void sysmon_qt::setup_memory()
 
    memory = new QProgressBar();
    memory->setRange( 0, 100 );
-   memory->setFont ( font_normal );
 
    // set palette
    QPalette p = memory->palette();
@@ -310,8 +295,9 @@ void sysmon_qt::update_memory( void )
    if ( lbl_memory            == nullptr ) return;
    if ( tick % memory_refresh != 0       ) return;
 
-   fMemInfo->seek( 0 );
-   QTextStream textStream( fMemInfo );
+   QFile file( "/proc/meminfo" );
+   file.open( QIODevice::ReadOnly | QIODevice::Text);
+   QTextStream textStream( &file );
 
    QString MemTotal;
    QString MemAvailable;
@@ -326,6 +312,7 @@ void sysmon_qt::update_memory( void )
         break;
      }
    }
+   file.close();
     
    QRegularExpression re( "\\d+" );
    QRegularExpressionMatch match = re.match( MemTotal );
@@ -454,7 +441,7 @@ void sysmon_qt::updateFont( void )
    font_normal = QFont( font_family, font_size );
 
    bool bold   = settings.value( "fontBold"  , false ).toBool();
-   int  weight = bold ? QFont::Bold : QFont::Normal;
+   QFont::Weight weight = bold ? QFont::Bold : QFont::Normal;
    font_normal.setWeight( weight );
 
    QFont fontBold = QFont( font_family, font_size, QFont::Bold );
@@ -602,6 +589,7 @@ void sysmon_qt::update_cpu_percentage( void )
    // Could possibly do it every cpu_refresh time (3 seconds for now)
    static qint64      previousJiffiesWork;
    static qint64      previousJiffiesTotal;
+   static QFile*      file;
    
    QString cpu;  // Not really used -- always "cpu"
    qint64  user, // jiffies
@@ -612,16 +600,16 @@ void sysmon_qt::update_cpu_percentage( void )
    // First time through only
    if ( previousJiffiesWork == 0 )
    {
-      fStat->seek( 0 );
-      QTextStream stream( fStat );
+      file = new QFile( "/proc/stat" );
+      file->open( QIODevice::ReadOnly | QIODevice::Text);
+      QTextStream stream( file );
       stream >> cpu >> user >> nice >> system >> idle;
-
       previousJiffiesWork  = user + nice + system;
       previousJiffiesTotal = previousJiffiesWork + idle;
       return;
    }
 
-   QTextStream stream( fStat );
+   QTextStream stream( file );
    stream.seek( 0 );  // Just read the first line each time
    stream >> cpu >> user >> nice >> system >> idle;
 
@@ -651,7 +639,7 @@ void sysmon_qt::update_temps( void )
    process->waitForFinished( 3000 ); // Give it 3 secs
    // Need an error message here if fails
    QByteArray      output   = process->readAllStandardOutput();
-   delete process;
+   delete          process;
 
    QJsonParseError err;   
    QJsonDocument   doc      = QJsonDocument::fromJson( output, &err );
@@ -660,7 +648,7 @@ void sysmon_qt::update_temps( void )
    QJsonObject root       = doc.object();
    int         count      = root.count();  // The number of interfaces
    QStringList interfaces = root.keys();   // keys are interface names
-   QRegExp rx(".*_input$");              
+   QRegularExpression rx  = QRegularExpression( ".*_input$" );              
    
    for ( int i = 0; i < count; i++ )
    {  

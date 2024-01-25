@@ -9,7 +9,7 @@ SM_Widgets::SM_Widgets()
 }
 
 // label
-QLabel* SM_Widgets::sm_label( const QString& labelString, int fontAdjust, int weight )
+QLabel* SM_Widgets::sm_label( const QString& labelString, int fontAdjust, QFont::Weight weight )
 {
    QLabel* newLabel = new QLabel( labelString, this );
 
@@ -28,13 +28,13 @@ QLabel* SM_Widgets::sm_label( const QString& labelString, int fontAdjust, int we
 }
 
 // textlabel ( fontAdjust defaults to smaller font (-1) if not specified )
-QLabel* SM_Widgets::sm_textlabel( const QString& labelString, int fontAdjust, int weight )
+QLabel* SM_Widgets::sm_textlabel( const QString& labelString, int fontAdjust, QFont::Weight weight )
 {
    return sm_label( labelString, fontAdjust, weight );
 }
 
 // banner ( defaults to Bold if weight not specified )
-QLabel* SM_Widgets::sm_banner( const QString& labelString, int fontAdjust, int weight )
+QLabel* SM_Widgets::sm_banner( const QString& labelString, int fontAdjust, QFont::Weight weight )
 {
    QLabel* newLabel = sm_label( labelString, fontAdjust, weight );
 
