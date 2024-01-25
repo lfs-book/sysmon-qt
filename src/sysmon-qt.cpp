@@ -219,6 +219,7 @@ void sysmon_qt::setup_cpuLoad()
       load = new QProgressBar();
       load->setRange( 0, 100 );
       load->setValue( 0 );
+      load->setFont( font_normal );
 
       // Set palette
       QPalette p = load->palette();
@@ -270,6 +271,7 @@ void sysmon_qt::setup_memory()
 
    memory = new QProgressBar();
    memory->setRange( 0, 100 );
+   memory->setFont( font_normal );
 
    // set palette
    QPalette p = memory->palette();
