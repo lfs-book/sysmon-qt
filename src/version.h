@@ -1,6 +1,6 @@
 #ifndef SMVERSION_H
 #define SMVERSION_H
 
-#define SMVERSION "1.0"
+#define SMVERSION "1.90"
 
 #endif

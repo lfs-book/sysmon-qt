@@ -35,7 +35,7 @@ private:
    int        memory_refresh  = 3;
    int        temp_refresh    = 5;
    int        tempsCount;
-   int        cpuPercentage;
+   int        cpuPercentage   = 0;
    bool       pauseUpdate     = false;
    bool       mFrame          = false; // turn frame on and off
    bool       pauseTempUpdate = false; // turn temperature update on and off

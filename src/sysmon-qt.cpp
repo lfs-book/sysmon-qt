@@ -651,6 +651,8 @@ void sysmon_qt::update_temps( void )
    process->waitForFinished( 3000 ); // Give it 3 secs
    // Need an error message here if fails
    QByteArray      output   = process->readAllStandardOutput();
+   delete process;
+
    QJsonParseError err;   
    QJsonDocument   doc      = QJsonDocument::fromJson( output, &err );
    // Need an error message here if fails
