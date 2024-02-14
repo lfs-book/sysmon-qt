@@ -22,3 +22,6 @@ monitoring CPU usage, memory use, and system temperatures.  It is also
 highly configurable with the ability choose which items to monitor and
 what colors and fonts to use.
 
+There are two versions of sysmon-qt in the repository.  The qt5 branch uses 
+qt5 libraries.  The git HEAD uses qt6 libraries.  The differences are 
+relatively small and the functionality is the same.
